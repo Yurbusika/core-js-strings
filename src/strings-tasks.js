@@ -241,7 +241,11 @@ function endsWith(str, substr) {
  *   formatTime(0, 0) => "00:00"
  */
 function formatTime(minutes, seconds) {
-  return `${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
+  let min = minutes.toString();
+  min = min.padStart(2, '0');
+  let sec = seconds.toString();
+  sec = sec.padStart(2, '0');
+  return `${min}:${sec}`;
 }
 
 /**
@@ -377,8 +381,16 @@ function reverseWords(str) {
  *   invertCase('JavaScript is Fun') => 'jAVAsCRIPT IS fUN'
  *   invertCase('12345') => '12345'
  */
-function invertCase(/* str */) {
-  throw new Error('Not implemented');
+function invertCase(str) {
+  const strArr = [];
+  for (let i = 0; i < str.length; i += 1) {
+    if (str[i] === str[i].toUpperCase()) {
+      strArr.push(str[i].toLowerCase());
+    } else {
+      strArr.push(str[i].toUpperCase());
+    }
+  }
+  return strArr.join('');
 }
 
 /**
@@ -464,8 +476,22 @@ function extractEmails(str) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  const firstHalf = 'ABCDEFGHIJKLMabcdefghijklm';
+  const secondHalf = 'NOPQRSTUVWXYZnopqrstuvwxyz';
+  const codeArr = [];
+  for (let i = 0; i < str.length; i += 1) {
+    if (firstHalf.includes(str[i])) {
+      const index = firstHalf.indexOf(str[i]);
+      codeArr.push(secondHalf[index]);
+    } else if (secondHalf.includes(str[i])) {
+      const index = secondHalf.indexOf(str[i]);
+      codeArr.push(firstHalf[index]);
+    } else {
+      codeArr.push(str[i]);
+    }
+  }
+  return codeArr.join('');
 }
 
 /**
@@ -492,8 +518,27 @@ function encodeToRot13(/* str */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const suits = {
+    '♣': 0,
+    '♦': 13,
+    '♥': 26,
+    '♠': 39,
+  };
+  const courts = {
+    A: 0,
+    J: 10,
+    Q: 11,
+    K: 12,
+  };
+
+  const [cardCourt, cardSuit] = value;
+  if (!Object.hasOwn(courts, cardCourt)) {
+    const numeral = Number.parseInt(value, 10);
+    const numeralSuits = value.at(-1);
+    return numeral + suits[numeralSuits] - 1;
+  }
+  return courts[cardCourt] + suits[cardSuit];
 }
 
 module.exports = {
